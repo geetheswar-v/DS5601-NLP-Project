@@ -1,38 +1,54 @@
-# Advanced RAG System
+# DS5601-NLP Project: Context-Aware Science Assistant
 
-An advanced RAG (Retrieval Augmented Generation) system built specifically for engineering students. This system leverages local LLM capabilities via Ollama using Granite-3.3 model and Granite-embeddings.
+This project implements a Retrieval-Augmented Generation (RAG) system designed as a science assistant. It leverages modern Small Language Models (SLMs) via Ollama and runs locally, enabling users to search for information and receive contextually relevant answers.
 
 ## Features
 
-- Local LLM processing using Ollama with Granite-3.3
-- Local embedding generation using Granite-embeddings
+- Local LLM processing using Ollama with Granite-3.3 (configurable in `config.py`)
+- Local embedding generation using Granite-embeddings (configurable in `config.py`)
 - Multi-source web retrieval (Wikipedia, arXiv, scholarly articles, etc.)
 - Advanced context refinement techniques
-- Concurrent processing for faster retrieval
-- Interactive CLI chat mode
-- Comprehensive evaluation using RAGAS, BLEU, ROUGE, and METEOR metrics
+- Concurrent processing for faster retrieval (See in `advanced_rag/retriever`)
+- Interactive CLI chat mode used Rich for best interactivatity
+- Evaluation Benchmark Using RAGAS & Traditional Metrics
+- Benchmarking Models can be changed in (configurable in `config.py`)
 
 ## Prerequisites
 
 - Python 3.9+
-- Ollama installed with Granite-3.3 and Granite-embeddings models
+- Ollama installed and running with the required models (see Configuration)
 - Poetry for dependency management
 
 ## Installation
 
-1. Clone this repository
-2. Install dependencies with Poetry:
+1.  Clone this repository:
+    ```bash
+    git clone <repo_url>
+    cd <folder_name>
+    ```
+2.  Install dependencies using Poetry:
+    ```bash
+    poetry install
+    ```
+3.  **Ensure Ollama is running** with the necessary models before starting the application (see Configuration).
 
+## Configuration
+
+Application settings, including the Ollama models used for LLM processing and embeddings, can be configured in the `advanced_rag/config.py` file.
+
+By default, the application uses:
+- LLM: `granite:3.3`
+- Embeddings: `granite-embeddings`
+
+To use different models:
+1.  Make sure the desired models are available in your local Ollama instance (e.g., `ollama pull <model_name>`).
+2.  Update the `LLM_MODEL` and `EMBEDDING_MODEL` variables in `advanced_rag/config.py`.
+
+Example Ollama commands to ensure default models are present:
 ```bash
-cd advanced_rag
-poetry install
-```
-
-3. Make sure Ollama is running with the required models:
-
-```bash
-ollama run granite:3.3
-ollama run granite-embeddings
+ollama pull granite:3.3
+ollama pull granite-embeddings
+# Ensure Ollama server is running (usually starts automatically or via `ollama serve`)
 ```
 
 ## Usage
@@ -42,6 +58,9 @@ ollama run granite-embeddings
 Use the provided `run.sh` script for easy execution:
 
 ```bash
+# Make run.sh executable (run once)
+chmod +x run.sh
+
 # Install dependencies
 ./run.sh install
 
@@ -112,8 +131,4 @@ poetry run python -m advanced_rag.cli benchmark
 poetry run python -m advanced_rag.cli benchmark --dataset path/to/benchmark.csv
 ```
 
-The CSV file should have at least a "question" column, and optionally a "reference_answer" column for evaluation.
-
-## License
-
-MIT
+The CSV file should have at least a "question" column, and optionally a "reference_answer" column for evaluation. Evaluation results, including RAGAS scores, BLEU, ROUGE, and METEOR metrics (if reference answers are provided), will be saved to a CSV file in the `results` directory.
